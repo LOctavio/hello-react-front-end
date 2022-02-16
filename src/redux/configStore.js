@@ -1,9 +1,9 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import greetingReducer from './greeting/greeting';
-import thunk from 'redux-thunk'
 
 const reducer = combineReducers({
-  greetingReducer
+  greetingReducer,
 });
 
 const store = createStore(
