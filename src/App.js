@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import Greeting from './Greeting';
+import { getGreeting } from './redux/greeting/greeting';
 
 function App() {
+  const greeting = useSelector((state) => state.greetingReducer);
+  const dispatch = useDispatch();
+
+  const greetingText = () => {
+    axios.get('http://localhost:3000/api/v1/greetings')
+      .then((response) => {
+        const greeting = response.data;
+        dispatch(getGreeting(greeting.text));
+      });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <div className="App">
+          <div className="App-header">
+            <Link to="/greeting" onClick={greetingText}>Click this link to get a random greeting</Link>
+          </div>
+          <Routes>
+            <Route exact path="/greeting" element={<Greeting greeting={greeting} />} />
+          </Routes>
+        </div>
+      </Router>
     </div>
   );
 }
